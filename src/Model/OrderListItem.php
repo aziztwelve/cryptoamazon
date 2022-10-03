@@ -25,7 +25,7 @@ class OrderListItem
 
     private string $payment_method;
 
-    private Collection $orderProducts;
+    private Collection $products;
 
     public function __construct(
         int $id,
@@ -37,7 +37,7 @@ class OrderListItem
         float $total,
         ?string $address,
         string $payment_method,
-//        Collection $orderProducts,
+        Collection $products,
     ) {
         $this->id = $id;
         $this->firstname = $firstname;
@@ -48,7 +48,7 @@ class OrderListItem
         $this->total = $total;
         $this->address = $address;
         $this->payment_method = $payment_method;
-//        $this->orderProducts = $orderProducts;
+        $this->products = $products;
     }
 
     public function getId(): int
@@ -142,18 +142,18 @@ class OrderListItem
     }
 
     /**
-     * @return Collection<Product>
+     * @return Collection
      */
-    public function getOrderProducts(): Collection
+    public function getProducts(): Collection
     {
-        return $this->orderProducts;
+        return $this->products;
     }
 
     /**
-     * @param Collection<Product> $orderProducts
+     * @param Collection $products
      */
-    public function setOrderProducts(Collection $orderProducts): void
+    public function setProducts(Collection $products): void
     {
-        $this->orderProducts = $orderProducts;
+        $this->products = $products;
     }
 }

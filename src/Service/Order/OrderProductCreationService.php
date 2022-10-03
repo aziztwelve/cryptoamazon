@@ -10,7 +10,7 @@ use App\Repository\OrderProductRepository;
 class OrderProductCreationService
 {
     public function __construct(
-        private OrderProductRepository $orderProductRepository
+        private OrderProductRepository $orderProductRepository,
     ) {
     }
 

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * @extends ServiceEntityRepository<Order>
@@ -37,5 +38,15 @@ class OrderRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getOrdersWithProducts(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->select("o, op, p")
+            ->innerJoin(join: 'o.ordersProducts', alias: 'op', conditionType: Expr\Join::WITH)
+            ->innerJoin(join: 'op.product', alias: 'p', conditionType: Expr\Join::WITH)
+            ->getQuery()
+            ->getArrayResult();
     }
 }
