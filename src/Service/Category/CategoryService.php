@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Category;
 
 use App\Entity\Category;
 use App\Model\CategoryListItem;
@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 class CategoryService
 {
     public function __construct(
-        private CategoryRepository $categoryRepository
+        private CategoryRepository $categoryRepository,
     ) {
     }
 
@@ -20,7 +20,7 @@ class CategoryService
         $categories = $this->categoryRepository->findAll([], ['name' => Criteria::ASC]);
 
         $items = array_map(
-            fn (Category $category) => new CategoryListItem(
+            static fn (Category $category) => new CategoryListItem(
                 $category->getId(),
                 $category->getName(),
             ),

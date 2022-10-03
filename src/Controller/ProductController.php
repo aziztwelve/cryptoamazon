@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\ProductService;
+use App\Requests\GetProductRequest;
+use App\Service\Product\ProductGettingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,13 +11,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends AbstractController
 {
     public function __construct(
-        private ProductService $productService
+        private ProductGettingService $productGettingService,
     ) {
     }
 
     #[Route('/api/v1/product/products')]
-    public function products(): Response
+    public function products(GetProductRequest $request): Response
     {
-        return $this->json($this->productService->getProducts());
+        $products = $this->productGettingService->getProducts(
+            $request->category_id,
+            $request->manufacturer_id,
+            $request->price,
+        );
+
+        return $this->json($products);
     }
 }

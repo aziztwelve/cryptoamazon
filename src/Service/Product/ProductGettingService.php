@@ -1,26 +1,29 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Product;
 
 use App\Entity\Product;
 use App\Model\ProductListItem;
 use App\Model\ProductListResponse;
 use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\Criteria;
 
-class ProductService
+class ProductGettingService
 {
     public function __construct(
-        private ProductRepository $productRepository
+        private ProductRepository $productRepository,
     ) {
     }
 
-    public function getProducts(): ProductListResponse
+    public function getProducts(
+        ?int $categoryId,
+        ?int $manufacturerId,
+        array $price,
+    ): ProductListResponse
     {
-        $products = $this->productRepository->findAll([], ['name' => Criteria::ASC]);
+        $products = $this->productRepository->findByFilter($categoryId, $manufacturerId, $price);
 
         $items = array_map(
-            fn (Product $product) => new ProductListItem(
+            static fn (Product $product) => new ProductListItem(
                 $product->getId(),
                 $product->getName(),
                 $product->getDescription(),

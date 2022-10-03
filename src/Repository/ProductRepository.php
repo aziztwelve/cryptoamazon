@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -39,28 +40,31 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Product[] Returns an array of Product objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findByFilter(
+        ?int $categoryId,
+        ?int $manufacturerId,
+        array $price,
+    ): array {
+        $query = $this->createQueryBuilder('p');
 
-//    public function findOneBySomeField($value): ?Product
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($categoryId) {
+            $query->innerJoin(join: 'p.categories', alias: 'c', conditionType: Expr\Join::WITH, condition: "c.id = :categoryId");
+            $query->setParameter('categoryId',  $categoryId);
+        }
+
+        if ($manufacturerId) {
+            $query->innerJoin(join: 'p.manufacturer', alias: 'm', conditionType: Expr\Join::WITH, condition: "m.id = :manufacturerId");
+            $query->setParameter('manufacturerId',  $manufacturerId);
+        }
+
+        if (!empty($price)) {
+            $query->andWhere('p.price BETWEEN :from AND :to')
+                ->setParameter('from', $price['from'])
+                ->setParameter('to', $price['to']);
+        }
+
+        return $query
+            ->getQuery()
+            ->getResult();
+    }
 }

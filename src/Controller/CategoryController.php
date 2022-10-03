@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\CategoryService;
+use App\Service\Category\CategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     public function __construct(
-        private CategoryService $categoryService
+        private CategoryService $categoryService,
     ) {
     }
 
